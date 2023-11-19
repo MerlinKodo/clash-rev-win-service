@@ -1,0 +1,30 @@
+name: Release CI
+
+on: workflow_dispatch
+
+jobs:
+  release-update:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: latest
+          tag_name: latest
+          files: |
+            target/release/clash-rev-service.exe
+            target/release/install-service.exe
+            target/release/uninstall-service.exe
